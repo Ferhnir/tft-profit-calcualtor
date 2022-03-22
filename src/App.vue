@@ -1,19 +1,22 @@
 <template>
   <v-app>
     <v-main>
-      <HelloWorld/>
+      <top-navbar/>
+      <calculator-page/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TopNavbar from './components/TopNavbar.vue'
+import CalculatorPage from './modules/profit-calculator/CalculatorPage.vue'
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    TopNavbar,
+    CalculatorPage
   },
 
   data: () => ({
