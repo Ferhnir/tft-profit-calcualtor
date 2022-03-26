@@ -4,7 +4,11 @@
     background-color="primary"
     theme="dark"
   >
-    <v-tab v-for="(option, index) in options" v-bind:key="index">
+    <v-tab
+      v-for="(option, index) in options"
+      v-bind:key="index"
+      :to="{ name: option.routeName }"
+    >
       {{ option.name }}
     </v-tab>
   </v-tabs>
@@ -16,9 +20,10 @@ export default {
 
   data: () => ({
     options: [
-      { name: 'One' },
-      { name: 'Two' },
-      { name: 'Three' }
+      { name: 'Investments', routeName: 'investmentPage' },
+      { name: 'Loot', routeName: 'lootPage' },
+      { name: 'Profit', routeName: 'profitPage' },
+      { name: 'Sync Prices', routeName: 'syncPricesPage' },
     ]
   }),
 }

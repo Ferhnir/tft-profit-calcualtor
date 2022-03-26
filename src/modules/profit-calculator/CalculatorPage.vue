@@ -1,5 +1,6 @@
 <template>
   <top-bar-tabs/>
+  <router-view name="calculatorPage" />
 </template>
 
 <script>
