@@ -3,6 +3,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 
 import colors from 'vuetify/lib/util/colors'
+import { aliases, mdi } from 'vuetify/lib/iconsets/mdi'
 
 // Vuetify
 import { createVuetify } from 'vuetify'
@@ -19,5 +20,12 @@ export default createVuetify({
       },
 
     },
+  },
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
+    }
   },
 })

@@ -3,7 +3,7 @@
 import InvestmentsPage from '../InvestmentsPage'
 import LootPage from '../LootPage'
 import ProfitPage from '../ProfitPage'
-import SyncPricesPage from '../SyncPricesPage'
+import SyncDataPage from '../SyncDataPage'
 
 const routes = [
   {
@@ -31,11 +31,11 @@ const routes = [
     }
   },
   {
-    path: '/SyncPrices',
-    name: 'syncPricesPage',
+    path: '/SyncDataPage',
+    name: 'syncDataPage',
     components: {
-      default: SyncPricesPage,
-      calculatorPage: SyncPricesPage
+      default: SyncDataPage,
+      calculatorPage: SyncDataPage
     }
   }
 ]

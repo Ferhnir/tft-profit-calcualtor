@@ -23,8 +23,15 @@ export default {
       { name: 'Investments', routeName: 'investmentPage' },
       { name: 'Loot', routeName: 'lootPage' },
       { name: 'Profit', routeName: 'profitPage' },
-      { name: 'Sync Prices', routeName: 'syncPricesPage' },
+      { name: 'Sync Data', routeName: 'syncDataPage' },
     ]
   }),
+  methods: {
+
+  },
+  mounted() {
+    console.log(this.$storage.getStorageSync('xxxx'))
+    console.log(this.$storage)
+  }
 }
 </script>
