@@ -96,8 +96,11 @@ export default {
       //   }
       // }, 3000);
 
+      // this.ca
 
 
+    },
+    executeSyncJob() {
 
     },
     categorySyncQuery(item) {
