@@ -16,27 +16,31 @@
           <th class="text-left" style="width: 15%;">
             Items Available
           </th>
-          <th class="text-left" style="width: 15%;">
+          <th class="text-center" style="width: 15%;">
             Syncronised
           </th>
-          <th class="text-left" style="width: 30%;">
+          <th class="text-center" style="width: 30%;">
             Last Update
           </th>
         </tr>
       </thead>
       <tbody>
         <tr
-          v-for="item in itemCategories"
+          v-for="item in itemCategoriesList"
           :key="item"
         >
           <td>{{ item.name }}</td>
           <td>{{ item.count }}</td>
-          <td>
+          <td class="text-center">
+            <div v-if="item.checked">
              <v-icon icon="mdi-check" color="green" />
+            </div>
+            <div v-else>
              <v-icon icon="mdi-close-circle" color="red" />
+            </div>
           </td>
-          <td>
-            {{ new Date() }}
+          <td class="text-center">
+            {{ item.lastUpdate ?? 'N/A' }}
           </td>
         </tr>
       </tbody>
@@ -50,82 +54,68 @@ import _ from 'lodash'
 export default {
   name: 'SyncDataPage',
   data: () => ({
+    urlSync: 'https://raw.githubusercontent.com/The-Forbidden-Trove/poeninja-prices/main/League/',
     actualStatus: 0,
     itemCategories: [
-      { name: 'Artifact', count: 0, localStorageId: 'artifact', lastUpdate: 'N/A', checked: false },
-      { name: 'Beast', count: 0, localStorageId: 'beast', lastUpdate: 'N/A', checked: false },
-      { name: 'BlightRavagedMap', count: 0, localStorageId: 'blight_ravaged_map', lastUpdate: 'N/A', checked: false },
-      { name: 'BlightedMap', count: 0, localStorageId: 'blighted_map', lastUpdate: 'N/A', checked: false },
-      { name: 'Currency', count: 0, localStorageId: 'currency', lastUpdate: 'N/A', checked: false },
-      { name: 'DeliriumOrb', count: 0, localStorageId: 'delirium_orb', lastUpdate: 'N/A', checked: false },
-      { name: 'DivinationCard', count: 0, localStorageId: 'divination_card', lastUpdate: 'N/A', checked: false },
-      { name: 'Essence', count: 0, localStorageId: 'essence', lastUpdate: 'N/A', checked: false },
-      { name: 'Fossil', count: 0, localStorageId: 'fossil', lastUpdate: 'N/A', checked: false },
-      { name: 'Fragment', count: 0, localStorageId: 'fragment', lastUpdate: 'N/A', checked: false },
-      { name: 'Incubator', count: 0, localStorageId: 'incubator', lastUpdate: 'N/A', checked: false },
-      { name: 'Oil', count: 0, localStorageId: 'oil', lastUpdate: 'N/A', checked: false },
-      { name: 'Resonator', count: 0, localStorageId: 'resonator', lastUpdate: 'N/A', checked: false },
-      { name: 'Scarab', count: 0, localStorageId: 'scarab', lastUpdate: 'N/A', checked: false },
-    ]
+      { name: 'Artifact', count: 0, localStorageId: 'artifact', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'Beast', count: 0, localStorageId: 'beast', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'BlightRavagedMap', count: 0, localStorageId: 'blight_ravaged_map', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'BlightedMap', count: 0, localStorageId: 'blighted_map', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'Currency', count: 0, localStorageId: 'currency', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'DeliriumOrb', count: 0, localStorageId: 'delirium_orb', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'DivinationCard', count: 0, localStorageId: 'divination_card', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'Essence', count: 0, localStorageId: 'essence', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'Fossil', count: 0, localStorageId: 'fossil', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'Fragment', count: 0, localStorageId: 'fragment', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'Incubator', count: 0, localStorageId: 'incubator', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'Oil', count: 0, localStorageId: 'oil', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'Resonator', count: 0, localStorageId: 'resonator', lastUpdate: 'N/A', checked: false, data: null},
+      { name: 'Scarab', count: 0, localStorageId: 'scarab', lastUpdate: 'N/A', checked: false, data: null},
+    ],
+    syncInterval: null
   }),
   components: {
   },
   methods: {
     syncData() {
-      // console.log(this.$storage.setStorageSync('xxxx', {
-      //   name: 'max',
-      //   age: 37
-      // }))
-
-      // this.$storage.setStorageSync('syncJobs', this.itemCategories);
-
-      let syncJobs = this.$storage.getStorageSync('syncJobs');
-
-      // _.forEach(this.itemCategories, function(){
-
-      //   vm.$storage.setStorageSync('')
-      // })
-
-      // let itemSize = this.itemCategories.length;
-      // let jobIndex = 0;
-
-      // setTimeout(function(){
-      //   if(jobIndex < itemSize) {
-      //     vm.categorySyncQuery(vm.$storage.getStorageSync('syncJobs', vm.itemCategories[jobIndex]))
-      //     jobIndex++;
-      //   }
-      // }, 3000);
-
-      // this.ca
-
-
+      this.executeSyncJob();
+      console.log(this.$storage.getStorageSync('itemsPrices'));
     },
     executeSyncJob() {
+      let vm = this;
+      // let jobIndex = 0;
 
+      _.forEach(this.itemCategories, (itemSet, i) => {
+        setTimeout(() => {
+          vm.categorySyncQuery(itemSet, i)
+        }, i * 3000);
+      });
     },
-    categorySyncQuery(item) {
-      console.log(item);
-      // this.axios.get('https://raw.githubusercontent.com/The-Forbidden-Trove/poeninja-prices/main/League/' + item.name + '.txt')
-      //           .then((response) => {
-      //             console.log(response);
-      //           });
+    categorySyncQuery(item, index) {
+      let vm = this;
+      vm.axios.get(vm.urlSync + item.name + '.txt')
+        .then((response) => {
+          vm.itemCategories[index].checked = true;
+          vm.itemCategories[index].lastUpdate = new Date();
+          vm.itemCategories[index].data = response.data;
+          vm.$storage.setStorageSync('itemsPrices', vm.itemCategories);
+          console.log(response);
+        });
     }
   },
   mounted() {
-
-    // var vm = this;
-
-    this.$storage.setStorageSync('syncJobs', this.itemCategories);
-
-    // _.forEach(this.itemCategories, function(o) {
-
-    //   if(vm.$storage.getStorageSync(o.localStorageId) == null){
-    //     vm.$storage.setStorageSync(o.localStorageId, {
-    //       count: o.count,
-    //     })
-    //   }
-
-    // })
+    if(
+      typeof this.$storage.getStorageSync('itemsPrices') === 'undefined' ||
+      this.$storage.getStorageSync('itemsPrices') == null
+    ){
+      console.log(this.$storage.getStorageSync('itemsPrices'));
+     this.$storage.setStorageSync('itemsPrices', this.itemCategories);
+    }
+  },
+  computed: {
+    itemCategoriesList() {
+      return this.$storage.getStorageSync('itemsPrices');
+    }
   }
 }
 </script>
