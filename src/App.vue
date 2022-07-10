@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main style="background-color: #1F1F1F; min-height: 100vh; height: 100%;">
       <top-navbar/>
       <calculator-page/>
     </v-main>

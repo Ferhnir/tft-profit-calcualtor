@@ -3,6 +3,7 @@
     fixed-tabs
     background-color="primary"
     theme="dark"
+    v-model="activeTab"
   >
     <v-tab
       v-for="(option, index) in options"
@@ -15,6 +16,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
   name: 'TopBarTabs',
 
@@ -26,12 +29,10 @@ export default {
       { name: 'Sync Data', routeName: 'syncDataPage' },
     ]
   }),
-  methods: {
-
-  },
-  mounted() {
-    console.log(this.$storage.getStorageSync('xxxx'))
-    console.log(this.$storage)
+  computed: {
+    activeTab() {
+      return _.findIndex(this.options, o => { return o.routeName == this.$route.name});
+    }
   }
 }
 </script>
