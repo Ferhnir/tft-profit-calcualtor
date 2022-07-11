@@ -22,7 +22,7 @@
             style="max-width: 1600px;"
           >
             <template v-slot:default="{ value }">
-              <strong class="mt-2">{{ Math.trunc(value) }}%</strong>
+              <strong>{{ Math.trunc(value) }}%</strong>
             </template>
           </v-progress-linear>
           <v-divider></v-divider>
