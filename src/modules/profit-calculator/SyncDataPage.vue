@@ -125,10 +125,10 @@ export default {
 
         if(
           typeof storageItemSet === 'undefined' ||
-          moment.duration(dateNow.diff(moment(storageItemSet.timestamp))).as('hours') > 0
+          moment.duration(dateNow.diff(moment(storageItemSet.timestamp))).as('hours') > 1
         ){
           itemSet.icon = vm.iconsStatus.updating;
-          setTimeout(() => vm.categorySyncQuery(itemSet, i), i * 3000);
+          setTimeout(() => vm.categorySyncQuery(itemSet, i), i * 250);
         }
 
       });
