@@ -93,6 +93,7 @@ export default {
       { name: 'Resonator', displayName: 'Resonators', count: 0, localStorageId: 'resonator', lastUpdate: null, icon: null, data: null},
       { name: 'Scarab', displayName: 'Scarabs', count: 0, localStorageId: 'scarab', lastUpdate: null, icon: null, data: null},
     ],
+    itemCategoriesToUpdate: [],
     iconsStatus: {
       uptodate: {
         type: 'mdi-check',
@@ -119,24 +120,27 @@ export default {
       let vm = this;
       var dateNow = new moment();
 
-      _.forEach(this.itemCategories, (itemSet, i) => {
-
+      vm.itemCategoriesToUpdate = _.filter(this.itemCategories, itemSet => {
         let storageItemSet = vm.$storage.getStorageSync(`tft-item-${itemSet.localStorageId}`);
-
         if(
           typeof storageItemSet === 'undefined' ||
           moment.duration(dateNow.diff(moment(storageItemSet.timestamp))).as('hours') > 1
         ){
+          return itemSet;
+        }
+      });
+
+      console.log(vm.itemCategoriesToUpdate);
+
+      _.forEach(vm.itemCategoriesToUpdate, (itemSet, i) => {
           itemSet.icon = vm.iconsStatus.updating;
           setTimeout(() => vm.categorySyncQuery(itemSet, i), i * 250);
-        }
-
       });
     },
     categorySyncQuery(item, index) {
       let vm = this;
 
-      this.actualIndexUpdate = ((index + 1) / vm.itemCategories.length) * 100;
+      this.actualIndexUpdate = ((index + 1) / vm.itemCategoriesToUpdate.length) * 100;
 
       vm.axios.get(vm.urlSync + item.name + '.txt')
         .then((response) => {
@@ -176,7 +180,6 @@ export default {
 
         if(moment.duration(y.diff(storageItem.timestamp)).as('hours') < 1){
           itemSet.icon = vm.iconsStatus.uptodate;
-          console.log(itemSet.icon)
         } else {
           itemSet.icon = vm.iconsStatus.expired;
         }
